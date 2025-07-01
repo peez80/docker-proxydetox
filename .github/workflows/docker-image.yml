@@ -34,4 +34,4 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         build-args: PROXYDETOX_VERSION=${PROXYDETOX_VERSION}
-        tags: peez/proxydetox:latest, peez/proxydetox:${PROXYDETOX_VERSION}
+        tags: peez/proxydetox:latest, peez/proxydetox:${{ env.PROXYDETOX_VERSION }}
