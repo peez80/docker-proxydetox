@@ -1,0 +1,37 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date '+%Y%m%d%H%M%S')"
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      env:
+        PROXYDETOX_VERSION: 0.11.3
+      with:
+        platforms: linux/amd64,linux/arm64
+        push: true
+        build-args: PROXYDETOX_VERSION=${PROXYDETOX_VERSION}
+        tags: peez/proxydetox:latest, peez/proxydetox:${PROXYDETOX_VERSION}
